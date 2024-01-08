@@ -1,15 +1,23 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import classes from "./newsletter-registration.module.css";
+import NotificationContext from "../../store/notification-context";
 
 function NewsletterRegistration() {
-  const [submitted, setSubmitted] = useState(false);
   const emailInputRef = useRef();
+  const notificationCtx = useContext(NotificationContext);
 
   function registrationHandler(event) {
     event.preventDefault();
 
     // fetch user input (state or refs)
     const enteredEmail = emailInputRef.current.value;
+
+    notificationCtx.showNotification({
+      title: "Signing up...",
+      message: "Registering for newsletter.",
+      status: "pending",
+    });
+
     const reqBody = { email: enteredEmail };
     // optional: validate input
     // send valid data to API
@@ -20,36 +28,48 @@ function NewsletterRegistration() {
         "Content-Type": "application/json",
       },
     })
-      .then((response) => response.json())
-      .then((data) => setSubmitted(true));
-    console.log(submitted);
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return response.json().then((data) => {
+          throw new Error(data.message || "Something went wrong!");
+        });
+      })
+      .then((data) => {
+        notificationCtx.showNotification({
+          title: "Success!",
+          message: "Signed up for newsletter!",
+          status: "success",
+        });
+      })
+      .catch((error) => {
+        notificationCtx.showNotification({
+          title: "Error!",
+          message: error.message || "Something went wrong!",
+          status: "error",
+        });
+      });
   }
 
-  if (submitted) {
-    return (
-      <section className={classes.newsletter}>
-        <p>Already Joined!</p>
-      </section>
-    );
-  } else {
-    return (
-      <section className={classes.newsletter}>
-        <h2>Sign up to stay updated!</h2>
-        <form onSubmit={registrationHandler}>
-          <div className={classes.control}>
-            <input
-              type="email"
-              id="email"
-              placeholder="Your email"
-              aria-label="Your email"
-              ref={emailInputRef}
-            />
-            <button>Register</button>
-          </div>
-        </form>
-      </section>
-    );
-  }
+  return (
+    <section className={classes.newsletter}>
+      <h2>Sign up to stay updated!</h2>
+      <form onSubmit={registrationHandler}>
+        <div className={classes.control}>
+          <input
+            type="email"
+            id="email"
+            placeholder="Your email"
+            aria-label="Your email"
+            ref={emailInputRef}
+          />
+          <button>Register</button>
+        </div>
+      </form>
+    </section>
+  );
 }
 
 export default NewsletterRegistration;

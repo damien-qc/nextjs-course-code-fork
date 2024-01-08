@@ -13,6 +13,7 @@ export function extractNewsletter(filePath) {
 
 function handler(req, res) {
   if (req.method === "POST") {
+    // return res.status(500).json({ message: "API DIDNT WORK" });
     const userEmail = req.body.email;
     const newEmailRegistration = {
       id: new Date().toISOString(),
