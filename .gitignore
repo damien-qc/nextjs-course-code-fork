@@ -4,10 +4,11 @@
 /node_modules
 /.pnp
 .pnp.js
-/data
 
 # testing
 /coverage
+/data/comments.json
+/data/newsletter.json
 
 # next.js
 /.next/

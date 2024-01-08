@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { pathToFileURL } from "url";
 
 export function buildCommentsPath() {
   return path.join(process.cwd(), "data", "comments.json");
@@ -14,16 +15,26 @@ export function extractComments(filePath) {
 function handler(req, res) {
   const selectedEventId = req.query.eventId;
   if (req.method === "POST") {
-    // const userEmail = req.body.email;
-    // const newEmailRegistration = {
-    //   id: new Date().toISOString(),
-    //   email: userEmail,
-    // };
-    // const filePath = buildNewsletterPath();
-    // const data = extractNewsletter(filePath);
-    // data.push(newEmailRegistration);
-    // fs.writeFileSync(filePath, JSON.stringify(data));
-    // res.status(201).json({ message: "Success!", email: newEmailRegistration });
+    const { email, name, text } = req.body;
+
+    if (!email.includes("@") || !name || name.trim() === "") {
+      res.status(422).json({ message: "Invalid Input." });
+    }
+
+    const newComment = {
+      id: new Date().toISOString(),
+      email,
+      name,
+      feedback,
+      eventId: selectedEventId,
+    };
+    const filePath = buildCommentsPath();
+    const data = extractComments(filePath);
+
+    data.push(newComment);
+    fs.writeFileSync(filePath, JSON.stringify(data));
+
+    res.status(201).json({ message: "Success!", comment: newComment });
   } else if (req.method === "GET") {
     const filePath = buildCommentsPath();
     const data = extractComments(filePath);
