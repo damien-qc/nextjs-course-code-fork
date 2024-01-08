@@ -14,7 +14,9 @@ export function NotificationContextProvider(props) {
   }
 
   function hideNotificationHandler() {
-    setActiveNotification(null);
+    if (activeNotification.status !== "pending") {
+      setActiveNotification(null);
+    }
   }
 
   const context = {
