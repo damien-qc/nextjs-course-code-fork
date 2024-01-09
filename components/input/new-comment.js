@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import classes from './new-comment.module.css';
+import { useRef, useState } from "react";
+import classes from "./new-comment.module.css";
 
 function NewComment(props) {
   const [isInvalid, setIsInvalid] = useState(false);
@@ -17,12 +17,12 @@ function NewComment(props) {
 
     if (
       !enteredEmail ||
-      enteredEmail.trim() === '' ||
-      !enteredEmail.includes('@') ||
+      enteredEmail.trim() === "" ||
+      !enteredEmail.includes("@") ||
       !enteredName ||
-      enteredName.trim() === '' ||
+      enteredName.trim() === "" ||
       !enteredComment ||
-      enteredComment.trim() === ''
+      enteredComment.trim() === ""
     ) {
       setIsInvalid(true);
       return;
@@ -52,7 +52,7 @@ function NewComment(props) {
         <textarea id="comment" rows="5" ref={commentInputRef}></textarea>
       </div>
       {isInvalid && <p>Please enter a valid email address and comment!</p>}
-      <button>Submit</button>
+      <button className={classes.btn}>Submit</button>
     </form>
   );
 }

@@ -27,6 +27,11 @@ function Comments(props) {
   }
 
   function addCommentHandler(commentData) {
+    notificationCtx.showNotification({
+      title: "Sending comment!",
+      message: "Comment being added...",
+      status: "pending",
+    });
     fetch("/api/comments/" + eventId, {
       method: "POST",
       body: JSON.stringify(commentData),
