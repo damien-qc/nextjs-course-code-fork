@@ -25,7 +25,7 @@ function handler(req, res) {
       id: new Date().toISOString(),
       email,
       name,
-      feedback,
+      text,
       eventId: selectedEventId,
     };
     const filePath = buildCommentsPath();
